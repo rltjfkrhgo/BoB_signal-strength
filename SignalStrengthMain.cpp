@@ -2,6 +2,7 @@
 
 #include <pcap.h>
 #include <stdio.h>
+#include "SignalStrength.h"
 
 void usage()
 {
@@ -15,6 +16,8 @@ int main(int argc, char* argv[])
         usage();
         return -1;
     }
+
+    Mac targetMac = Mac(argv[2]);
 
     char* dev = argv[1];
     char errbuf[PCAP_ERRBUF_SIZE];
@@ -35,6 +38,8 @@ int main(int argc, char* argv[])
             printf("pcap_next_ex return %d(%s)\n", res, pcap_geterr(handle));
             break;
         }
+
+        SignalStrength(packet, targetMac);
     }
 
     pcap_close(handle);
