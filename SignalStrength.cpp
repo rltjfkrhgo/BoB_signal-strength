@@ -21,11 +21,9 @@ void SignalStrength(const u_char* packet, const Mac& targetMac)
        type != Dot11Frame::TYPE_DATA)
        return;
 
-    Mac transmitter(dot11frame->transmitter);
-
-    if(transmitter == targetMac)
+    if(dot11frame->transmitter == targetMac)
     {
-    int8_t  strength = *(int8_t*)(packet + radiotap->len - 2);
-    printf("%s  %d\n", std::string(transmitter).c_str(), strength);
+        int8_t  strength = *(int8_t*)(packet + radiotap->len - 2);
+        printf("%s  %d\n", std::string(dot11frame->transmitter).c_str(), strength);
     }
 }

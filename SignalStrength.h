@@ -7,6 +7,8 @@
 #include <cstring>
 #include "mac.h"
 
+typedef struct Mac Mac;
+
 #pragma pack(push, 1)
 struct radiotap
 {
@@ -27,18 +29,17 @@ struct dot11frame
     static const uint8_t  TYPE_CONTROL = 0b0100;
     static const uint8_t  TYPE_DATA = 0b1000;
 
-    uint8_t   type;
-    uint8_t   flags;
-    uint8_t   duration[2];
-    uint8_t   receiver[6];
-    uint8_t   transmitter[6];
-    uint8_t   address3[6];
+    uint8_t  type;
+    uint8_t  flags;
+    uint8_t  duration[2];
+    Mac      receiver;
+    Mac      transmitter;
+    Mac      address3;
 };
 #pragma pack(pop)
 
 typedef struct radiotap Radiotap;
 typedef struct dot11frame Dot11Frame;
-typedef struct Mac Mac;
 
 void SignalStrength(const u_char* packet, const Mac& targetMac);
 
