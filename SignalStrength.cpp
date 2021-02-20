@@ -23,7 +23,33 @@ void SignalStrength(const u_char* packet, const Mac& targetMac)
 
     if(dot11frame->transmitter == targetMac)
     {
-        int8_t  strength = *(int8_t*)(packet + radiotap->len - 2);
-        printf("%s  %d\n", std::string(dot11frame->transmitter).c_str(), strength);
+        size_t  offset = 0;
+
+        // TSFT
+        if(radiotap->present & 0b1)
+            offset += 8;
+        
+        // Flags
+        if(radiotap->present & 0b10)
+            offset += 1;
+        
+        // Rate
+        if(radiotap->present & 0b100)
+            offset += 1;
+
+        // Channel
+        if(radiotap->present & 0b1000)
+            offset += 4;
+
+        // FHSS
+        if(radiotap->present & 0b10000)
+            offset += 2;
+
+        // Antenna signal
+        if(radiotap->present & 0b100000)
+        {
+            int8_t  strength = *(int8_t*)(packet + sizeof(Radiotap) + offset);
+            printf("%s  %d\n", std::string(dot11frame->transmitter).c_str(), strength);
+        }
     }
 }
